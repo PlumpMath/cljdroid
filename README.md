@@ -1,6 +1,6 @@
 # cljdroid
 
-This sample application is derived from a sample by Mark Grodfrey, but also includes a some use of core async to solve a
+This sample application is derived from a sample by Mark Godfrey, but also includes a some use of core async to solve a
 problem described below for clojurejs. 
 
 Main structure of code pinched from there too:
