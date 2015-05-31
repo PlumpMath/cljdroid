@@ -15,13 +15,13 @@
 (defn by-id
   "Fetch a view from a context (view/activity)"
   [activity view-id]
-  (find-view (*a activity) view-id))
+  (find-view activity view-id))
 
 (defn set-status!
-  [status]
+  [activity status]
   (log/d "Setting status to: " status)
   (on-ui
-    (.setText (by-id :main ::status-text) (str status))))
+    (.setText (by-id activity ::status-text) (str status))))
 
 (defn clicks->chan
   "Given a target View and return a channel of
@@ -36,10 +36,10 @@
 
 (defn magic-sequence
   "Set up magic key sequence"
-  []
+  [activity]
   (log/d "Setting up magic sequence...")
-  (let [a                    (clicks->chan (by-id :main ::button-a) (chan 1 (map (constantly :a))))
-        b                    (clicks->chan (by-id :main ::button-b) (chan 1 (map (constantly :b))))
+  (let [a                    (clicks->chan (by-id activity ::button-a) (chan 1 (map (constantly :a))))
+        b                    (clicks->chan (by-id activity ::button-b) (chan 1 (map (constantly :b))))
         combination-max-time 5000
         secret-combination   [:a :a :b :b :a :a]]
     (go-loop [correct-clicks []
@@ -48,30 +48,30 @@
             clicks (conj correct-clicks val)]
         (cond
           (= channel timer) (do
-                                (set-status! "You're not fast enough, try again!")
+                                (set-status! activity "You're not fast enough, try again!")
                                 (recur [] (timeout combination-max-time)))
           (= clicks secret-combination) (do
-                                          (set-status! "Combination unlocked!")
+                                          (set-status! activity "Combination unlocked!")
                                           (recur [] (timeout combination-max-time)))
           (and (= val (first secret-combination)) (zero? (count correct-clicks))) (do
-                                                                                    (set-status! clicks)
+                                                                                    (set-status! activity clicks)
                                                                                     (recur clicks (timeout combination-max-time)))
           (= val (nth secret-combination (count correct-clicks))) (do
-                                                                    (set-status! clicks)
+                                                                    (set-status! activity clicks)
                                                                     (recur clicks timer))
           :else
           (do
-            (set-status! clicks)
+            (set-status! activity clicks)
             (recur [] timer)))))))
 
 
 (defactivity org.kipz.cljdroid.StartingActivity
   :key :main
-  :on-start (fn [_] (magic-sequence))
+  :on-start (fn [activity] (magic-sequence activity))
   :on-create
   (fn [this bundle]
     (on-ui
-      (set-content-view! (*a)
+      (set-content-view! this
         [:linear-layout {:orientation :vertical}
          [:text-view {:text "Enter AABBAA within 5 seconds!"}]
          [:button {:text "A" :id ::button-a}]

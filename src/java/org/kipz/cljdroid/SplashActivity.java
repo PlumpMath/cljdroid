@@ -59,9 +59,9 @@ public class SplashActivity extends Activity {
                     INIT.invoke(SplashActivity.this.getApplication());
 
                     try {
-                        Class.forName("org.kipz.cljdroid.MainActivity");
+                        Class.forName("org.kipz.cljdroid.StartingActivity");
                     } catch (ClassNotFoundException e) {
-                        Log.e(TAG, "Failed loading MainActivity", e);
+                        Log.e(TAG, "Failed loading StartingActivity", e);
                     }
 
                     proceed();
