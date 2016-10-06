@@ -1,0 +1,16 @@
+####
+
+# editor info
+name: atomist-project-templates.spring-boot-common-editors.AddDockerMavenBuild
+group: atomist-project-templates
+artifact: spring-boot-common-editors
+version: 1.0.2
+
+# backing git repo
+repo: git@github.com:russmiles/spring-boot-common-editors.git
+branch: master
+sha: b778ce166d1568c83d4e2be5ccf6f5e03706bf01
+
+# parameter values
+dockerRepository: blah
+
